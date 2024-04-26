@@ -18,8 +18,8 @@
                 </div>
                 <div class="card-body">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Adicionar Tarefa ..." aria-label="add" aria-describedby="add" >
-                        <button class="btn btn-primary" type="button" id="add" data-bs-toggle="tooltip" data-bs-title="Adicionar">
+                        <input id="vlrTarefa" type="text" class="form-control" placeholder="Adicionar Tarefa ..." aria-label="add" aria-describedby="add" >
+                        <button onclick="addTarefa()" class="btn btn-primary" type="button" id="add" data-bs-toggle="tooltip" data-bs-title="Adicionar">
                            <i class="fa-solid fa-square-plus" data-bs-toggle="tooltip" data-bs-title="Adicionar"></i>
                         </button>
                     </div>
@@ -31,25 +31,14 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <ul class="list-group">
+                    <ul class="list-group" id="listGroup">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             tarefa 01
                             <div>
                                 <button class="btn btn-outline-primary me-2" type="button">
                                     <i class="fa-regular fa-pen-to-square"></i>
                                 </button>
-                                <button class="btn btn-outline-danger" type="button">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </button>
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            tarefa 02
-                            <div>
-                                <button class="btn btn-outline-primary me-2" type="button">
-                                    <i class="fa-regular fa-pen-to-square"></i>
-                                </button>
-                                <button class="btn btn-outline-danger" type="button">
+                                <button  class="btn btn-outline-danger" type="button">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
                             </div>
@@ -64,6 +53,50 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/9d7580a959.js" crossorigin="anonymous"></script>
+<script src="controller.js"></script>
 
-</body>
+<script>
+    const ctr = new ControladorPagina();
+
+    function addTarefa(){
+        const taf = document.getElementById('vlrTarefa').value;
+        ctr.addTarefa(taf)
+        document.getElementById('vlrTarefa').value = '';
+        refreshList();
+    }
+
+    function removeTarefa(index) {
+        ctr.removeTarefa(index);
+        refreshList(); 
+    }
+
+    function editarTarefa(index) {
+        document.getElementById('vlrTarefa').value = ctr.obterTarefa(index);
+        ctr.removeTarefa(index);
+        refreshList(); 
+    }
+
+    function refreshList() {
+        const listBody = document.getElementById('listGroup');
+        listBody.innerHTML = '';
+        ctr.listarTarefa().forEach((tarefa, index) => {
+        const row = document.createElement('li');
+        row.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+        row.innerHTML = `
+            ${tarefa}
+            <div>
+                <button onclick="editarTarefa(${index})" class="btn btn-outline-primary me-2" type="button">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+                <button onclick="removeTarefa(${index})" class="btn btn-outline-danger" type="button">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+        `;
+        listBody.appendChild(row);
+        });
+    }
+
+</script>
+</body> 
 </html>
