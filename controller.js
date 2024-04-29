@@ -2,7 +2,15 @@ class ControladorPagina {
     tarefas = [];
 
     addTarefa(tarefa){
-        this.tarefas.push(tarefa)
+        if(!this.existeTarefa(tarefa)){
+            this.tarefas.push(tarefa)
+            return true;
+        }
+        return false;
+    }
+
+    existeTarefa(tarefa){
+        return this.tarefas.some(taf => taf.trim().toLowerCase() === tarefa.trim().toLowerCase());
     }
 
     removeTarefa(index){
